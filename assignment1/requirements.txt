@@ -1,1 +1,92 @@
-https://www.cs.sfu.ca/~mitchell/cmpt-225/2020-Spring/index.html
+https://www.cs.sfu.ca/~mitchell/cmpt-225/2020-Spring/assigns/A1-lists/A1-lists.html
+
+CMPT 225 Assignment 1: List Operations
+
+This document is Copyright © David Mitchell, 2020.
+(So what? It means that if you post or otherwise distribute copies of this assignment, or substantial parts of it, in any more-or-less public place, without my permission, you will be in violation of the SFU Student Academic Integrity Policy.)
+
+Updates
+
+The assignment will be graded out of 24, not 20.
+Example of a Makefile added in Supplementary Materials section.
+Overview
+
+For this assignment, you are two write two small programs that compare the times for some basic operations on lists using the Vector and List classes provided by the textbook author, and use them to carry out some simple experiments. To carry out the timing, you will also need to make some small modifications to the Vector and List implementations.
+
+Part 1
+
+For the first timing program, you will need to add an implementation of a new operation visitAll() to the implementations in Vector.h and List.h. This operation simply "visits" each element in the list. Then, you need to write a program (call it's file part1.cpp) that constructs a list of values in two different containers: one in a Vector, and the other (with the same number of elements) in a List. Your program should construct each list by adding elements one-by-one using push_back. It should also record the time it takes to construct each list, and then the time it takes to execute visitAll() for each list. Finally, the program should report these times.
+
+Here are some details (some suggestions, some requirements):
+
+Download the (.zip or .tar file) of the author's code using the link on the course web page. Study the implementations of Vector and List classes to understand the roles of their variables, the type declarations, and how the existing operations work.
+Implement a preliminary version of your part1.cpp) that initially does nothing but print a message, and start adding functionality. First, make it construct a Vector, as described. Then add timing of the Vector construction. Then add construction of a List, and then timeing for the list. Once this is working, start adding the visitAll implementations. First, add stub procedures that don't do anything, and then modify them until they do what they need to. (Here, ``stub implementation'' means an implementation that can be used to compile and run your program with calls to visitAll which don't actually do anything other than perhpas print out a message.)
+It's not important exactly what you do to "visit" each list element, but for the timing experiment to work, you have to actually do something to the element, to make sure the compiler doesn't decide to just ignore your code because it doesn't do anything. Also, remember that Vector and List are template classes, meaning that different instantiations of them can store different kinds of elements. So, the thing you do to "visit" a value must work for all sorts of types.
+The declaration for visitAll() should look like this:
+   void visitAll(){...}
+Visiting each element of the Vector is easy, because it is implemented with an array: you just have to get the variable name and index range right.
+To visit each element of the List you will have to traverse the list using a pointer. This is a good elementary exercise in pointer manipulation if you haven't used pointers before. You are not allowed to use an iterator for this.
+You may not change any of the existing code in Vector.h and List.h.
+To complete this part of the assignment, use your program to generate times for several different list sizes, and for at least two types of list elements, and prepare a report. Your report need only (briefly but clearly) describe the types and sizes of lists you tested, and give your timing results (preferably in both table and plot form).
+Your program should output the following information, arranged exactly as shown (because we might use a simple script to check it):
+[your name]
+[your_student_number]
+[your_login_id]
+Program: [part1]
+Type of Elements: [a C++ type]
+Number of Elements: [integer]
+Time units: ["seconds" or "milliseconds" or ...]
+Time for Vector Insertion: [float]
+Time for List Insertion: [float]
+Time for Vector Visiting: [float]
+Time for List Visiting: [float]
+To measure the time taken by a function call, use the clock() function, as illustrated in Supplementary Material, below.
+Part 2
+
+The List class has a push_front function, but the Vector class does not, because it is not an efficient operation for an partially-filled array implementation of a list. For this part, you are to add a push_front operation to the Vector class, and then carry out an experiment that is just like that in Part 1, but constructing both lists using the push_front operation. Call the file with this version of the Vector class Vector2.h. Call the program that computes the timings part2.cpp.
+Submission, Grading, Etc
+
+This assignment will be graded out of 24.
+4 marks each for correct implementations of visitAll;
+4 marks for correct implementation of push_front;
+4 marks each for the programs part1.cpp and part2.cpp.
+4 marks for the report.
+Marks are assigned only for code that compiles and runs on the CSIL Linux machines. A "complete" solution that cannot be compiled and run is worth zero marks. However, if you cannot complete all parts of the assignment, you can get partial marks for parts that are working. So, it is important to have working code at all times, even if that code does not do everytying it should. (That way, you won't suddenly realize that time is up and you don't have anything to submit because of bugs you can't find.) It follows that you should develop your solutions according to a process that ensures you get part marks if something goes wrong or you run out of time. So, construct your programs carefully and methodically, making only small changes before verifying they compile and run again.
+
+Submit your assignment online to CourSys .  Make a single .zip file by running zip on the directory containing all your source code files and your report. Submit this .zip file to Coursys. Your submitted files should include:
+
+Your modified Vector.h and List.h files, and your Vector2.h;
+Your part1.cpp and part2.cpp;
+A Makefile which can be used in the natural way. In particular, executing make all in the directory containing your code compiles your class implementations and creates a executable versions of your programs in part1.cpp and part2.cpp (called part1 and part2). Executing make clean all the files produced by the compliation process (but nothing else).
+A pdf file, report.pdf containing your reports for the two experiments. (You can produce this any way you want, including with handwriting and a hand-drawn plot, as long as it is clear and readable with a standard pdf viewer.)
+The assignment is due by 8:00 pm on Wednesday January 29 (changed from Monday January 27).
+Supplementary Material
+
+More information may be added here from time-to-time.
+Here is an example of timing an operation in C++, using the clock() function.
+#include <time.h> 
+
+double elapsed_time( clock_t start, clock_t finish){
+   // returns elapsed time in milliseconds
+   return (finish - start)/(double)(CLOCKS_PER_SEC/1000);
+}
+
+int main (int argc, char * const argv[]) {
+
+   clock_t start, finish ;// used for getting the time.
+
+   start = clock();
+   /* stuff to time here */
+   finish = clock();
+   double time_taken = elapsed_time(start,finish);
+}
+Here is an example of a program timing operations on Lists and Vectors of different types.
+Creating the make file: The process of re-compiling multi-file programs during developement and testing quickly becomes tedious, partly because of dependencies between files. Any time a file is changes, all compilation units which depend on it must be re-compiled, and in the correct order. "Make" or "Build" systems are designed to help with this. (Every decent IDE has such a system built in.) The standard build program that comes with Unix systems, including Linux, is called "make". To use make, you first create a file called a "Makefile", which describes the dependencies and compilation steps to build your program. If you are not experienced with writing Make files, start by looking at this Makefile tutorial. Generally speaking, every make file you write should support at least 2 commands:
+uname@hostname: ~$ make all
+which compiles everything for the project, and
+uname@hostname: ~$ make clean
+which should delete all the files produced by the compliation process (but not, obviously, your source files).
+Here is an example of Makefile for a test program for a simple template class:
+Template class declaration: MinimalStack.h.
+Test program: test.cpp.
+Make file: Makefile.
