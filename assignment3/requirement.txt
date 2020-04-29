@@ -1,1 +1,44 @@
-https://www.cs.sfu.ca/~mitchell/cmpt-225/2020-Spring/index.html
+CMPT 225 Assignment 3: Sorting Experiments.
+https://www.cs.sfu.ca/~mitchell/cmpt-225/2020-Spring/assigns/A3-sorting/A3-sorting.html
+
+In practice, the best sorting algorithm to use depends on the application: the nature of the objects to be sorted and the distribution of inputs (the sizes of the sets, whether they are essentially random or nearly-ordered already, etc). Conventional wisdom has it that a good implementation of quicksort will perform very well in a large majority of cases, so it is the default choice for most programmers, and for most standard libraries. (This is the case, even though its worst case performance is quadratic, while several other algorithms are never worst than n log n.) In this exercise, we will look at the actual running time of Quicksort under various conditions.
+
+Getting Started
+
+Download the files Qsort.h., test.cpp., and Makefile. You may - and probably should - carry out the experiments below by making appropriate modifications to these files.
+The file Qsort.h. contains implementations of Quicksort and Insertion Sort for sorting arrays of integers. These are essentially the same as the pseudo-code versions presented in class. (The Quicksort has the code for the partition function included the body. This slightly reduces the overhead time for the function calls.) The file test.cpp. contains a sample program for timing calls to sorting functions, and reporting the mean times for several runs.
+
+Experiment 1: Quicksort Pivot Selection
+
+As discussed in class, the choice of pivot for Quicksort can be quite important. The goal of this experiment is to observe how the pivot selection method can affect performance of Quicksort on different kinds of inputs.
+To illustrate, consider the "lazy" pivot selection method of just using whatever value is in A[hi]. There are certain kinds of input on which this method will result in very poor performance. (If you aren't certain: run experiments to verify your ideas.) But what if the input has all distinct values in completely random order? Then A[hi] is essentially a random number, so performance might be as good as choosing random pivots (which we know is good, at least asymptotically). However, for a different method of selecting pivots, the performance on these two families of inputs might look quite different.
+
+For the experiment, you are to choose two different methods of chooseing pivots and two different families of inputs. You need to think about these at the same time, because we're interested in the interaction between them. A "kind of input" should be a notion of an distribution of input values that can apply to inputs of many sizes. For example: random numbers in a certain (probably large) range; the numbers 1 through n in order; etc. (You might also want to consider using a data type other than integers.) Implement the two versions of quicksort (you may use the implementation provided as your starting point). They should be identical except for pivot selection.
+
+Choose also several (at least 5) different sizes of input. Run each algorithm on each size of each kind of input, and record the times. Produce a plot with input size on the x-axis and time on the y-axis, and draw a curve for each of the 4 pairs of algorithm and input type. You'll get plots that are less noisy -- and thus more informative -- if you take the mean of several runs for each condition (point in the plot). You want to choose your sizes so that you get run times that give you curves that are meaninful. (E.g., if they are too small you won't see a pattern; choose a natural progression of sizes, for example of the form a+cx, where a,c are natural numbers and x is in {1,2,3,4,5}.)
+
+Optional: include in your plot two more curves, for the performance of the standard C Library Sort function on your two kinds of input. Here are some suggestions to help you start thinking about parameters for your experiment.
+
+Examples of possible pivot selection schemes are: use A[lo] or A[hi] (which we'll consider to be the same); Use the value at the midpoint between lo and hi; use a random index in the range lo---hi.
+Examples of possible kinds of input include ordered, reverse ordered, random (which can have various distributions), etc.
+The 5 sizes should follow a natural scheme, and be such that the smallest size gives non-zero times, and the largest size doesn't take until May to run. For example, the five sizes 10000, 20000, 30000, 40000 and 50000 might work, depending on the speed of the computer, as well as your choices of inputs and pivots.
+Experiment 2: IntroSort
+
+The last slide of the sorting lecture points out that simpler sorting algorithms may be faster than Quicksort on small inputs, and thus a faster sorting algorithm can be obtained by making the Quicksort base case a call to such an algorithm when the size is fairly small. A well-known proposal to do this is called "IntroSort". In this experiment, you are to examine this property.
+Choose a sorting algorithm to use for small inputs. (It can be any sorting algorithm you want, provided it is actually faster on small inputs. Selection Sort, Insertion Sort and Heapsort seem like good candidates.) Implement your chosen "simple" sort, and two versions of Quicksort. The two versions of Quicksort should be identical (in particular, they should use the same pivot selection method), except for the base case. The base case of standard Quicksort is lo>=hi (in which case there is nothing to do); the base case for the modified version is lo >= hi - K, for some constant size K (in which case you call your simple sort procedure, instead of continuing the Quicksort recursion).
+
+Produce plots of running times for these three sorting algorithms -- your simple sort; standard Quicksort (with standard base case); and modified Quicksort (with a call to simple sort as the base case) -- on the same two kinds of input you used for the first experiment. For each input type, there will be some number S such that your simple sort is faster than standard Quicksort when the size is less than S, but slower than standard Quicksort when the size is greater than S. (It is possible, for some particular choices of simple sort, input, and pivot selection method, that this does not happen, but for most reasonable choices it should.) You want to pick your range of sizes so that you can see this point in your plots. The optimal choice of K, the size for which your modified Quicksort calls the simple sort should, presumably, be somewhat less than S, the size at which your simple sort and standard Quicksort take the same amount of time. (Interesting questions include: what is S for different choices of input, simple sort and Quicksort pivot; how does the optimal K related to S; are S and the optimal K the same for your two different kinds of inputs?)
+
+Optional: include in your plot two more curves, for the performance of the standard C Library Sort function on your two kinds of input. A comparison of Quicksort and Insertion sort is already illustrated in the sample test program. You are free to use and modify this program for your own tests.
+
+What to submit
+
+Write a short report that, for each experiment gives;
+A brief but clear statement of the experiment parameters: the algorithmic choices, the types of inputs, and the range of sizes used;
+The plot of run times;
+A very short description of what you observed.
+A very short description of purpose of each of the source code files (and any other files) included in your submission.
+The report should be in a PDF file called Report.pdf. Place all of the source code files used to carry out your experiments, plus your report, in a directory and make a .zip (not .rar) file of that directory. Your files should include a Makefile such that "make all" will compile all the code used to make your experiments. Submit this to Coursys. It should be possible for the grader to compile and run your test program(s), and comletely re-generate all the data in your plots, without having to alter the program(s). The assignment is due before 11pm on Wednesday April 8.
+Assessment
+
+The assignments will be graded out of 20, with 8 marks for each experiment and 4 marks for satisfying all other citeria. Completeness and readability are most important. Obviously the plot data should have actually been produced by your programs, and these programs should be correct, to obtain full marks. Marks may be deducted if your descriptions of your experiment parameters are incomplete or unclear, or if the test programs do not compile and produce your data. The reports will be graded Essay-style: better reports of get better grades; more interesting experiments may get better grades (or even bonus marks).
